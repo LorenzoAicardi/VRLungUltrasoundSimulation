@@ -1,0 +1,37 @@
+#pragma kernel Max
+
+StructuredBuffer<float2> _Input;
+RWStructuredBuffer<float> _GroupResult;
+
+groupshared float2 sharedData[64];
+
+[numthreads(64,1,1)]
+void Max(
+    uint3 id : SV_DispatchThreadID,
+    uint groupIndex : SV_GroupIndex
+    )
+{
+    // Step 1: Load from global memory into fast shared memory
+    sharedData[groupIndex] = _Input[groupIndex];
+
+    GroupMemoryBarrierWithGroupSync();
+
+    // Step 2: Parallel reduction in shared memory
+    for (uint stride = 32; stride > 0; stride >>= 1)
+    {
+        if (groupIndex < stride)
+        {
+            if (sharedData[groupIndex + stride].x > sharedData[groupIndex].x)
+            {
+                sharedData[groupIndex] = sharedData[groupIndex + stride];
+            }
+        }
+        GroupMemoryBarrierWithGroupSync();
+    }
+
+    // Step 3: Write final result
+    if (groupIndex == 0)
+    {
+        _GroupResult[0] = sharedData[0].x;
+    }
+}

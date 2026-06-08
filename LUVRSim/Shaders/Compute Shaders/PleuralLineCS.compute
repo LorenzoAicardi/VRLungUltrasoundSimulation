@@ -1,0 +1,53 @@
+#pragma kernel CSMain
+
+Texture2D _Input;
+RWStructuredBuffer<float2> _GroupResults;
+
+int _Width;
+int _Height;
+
+groupshared float2 sharedData[256]; // 16x16 threads
+
+[numthreads(16,16,1)]
+void CSMain (uint3 id : SV_DispatchThreadID, // Global pixel coordinate
+             uint3 groupId : SV_GroupID, // Determines which tile I am in
+             uint3 threadId : SV_GroupThreadID,
+             uint groupIndex : SV_GroupIndex)
+{
+    float diff = 0;
+    float pleuralY = 0;
+
+    if (id.x < _Width && id.y < _Height)
+    {
+        float3 current = _Input[int2(id.x,id.y)].rgb;
+        float3 above = id.y > 0 ? _Input[int2(id.x,id.y-1)].rgb : 0;
+
+        float lum = dot(current, 1.0/3.0);
+        float lumAbove = dot(above, 1.0/3.0);
+
+        diff = abs(lum - lumAbove);
+        pleuralY = (float)id.y / _Height;
+    }
+
+    sharedData[groupIndex] = float2(diff, pleuralY); // All threads in the group store their result
+
+    GroupMemoryBarrierWithGroupSync(); // Syncs data across threads
+
+    // Parallel reduction inside group of 16x16 threads
+    for (uint stride = 128; stride > 0; stride >>= 1)
+    {
+        if (groupIndex < stride)
+        {
+            if (sharedData[groupIndex + stride].x > sharedData[groupIndex].x)
+                sharedData[groupIndex] = sharedData[groupIndex + stride];
+        }
+        GroupMemoryBarrierWithGroupSync();
+    }
+
+    if (groupIndex == 0)
+    {
+        uint flatGroupIndex = groupId.y * (_Width / 16) + groupId.x;
+        _GroupResults[flatGroupIndex] = sharedData[0];
+    }
+}
+

@@ -1,0 +1,28 @@
+#pragma kernel Shadows
+
+RWTexture2D<float4> _Input;
+RWTexture2D<float> _GroupResult;
+
+[numthreads(128,1,1)]
+void Shadows(
+    uint3 id : SV_DispatchThreadID,
+    uint groupIndex : SV_GroupIndex
+    )
+{
+    bool foundRib = false;
+
+    // Scan from the top of the column to the bottom until I find a rib.
+    // If I find a rib (using the brightness as a parameter), set all pixels below as black.
+    for (int i = 128; i > 0; i--)
+    {
+        float3 currColor = _Input[int2(id.x,i)].rgb;
+        float brightness = dot(currColor.rgb, float3(0.299, 0.587, 0.114));
+        if (brightness > 0.38 && !foundRib)
+            foundRib = true;
+
+        if (!foundRib)
+            _GroupResult[int2(id.x, i)] = 1; // Keep current color
+        else
+            _GroupResult[int2(id.x, i)] = 0; // Color the rib black
+    }
+}
