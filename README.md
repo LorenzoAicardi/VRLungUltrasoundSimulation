@@ -12,4 +12,6 @@ https://github.com/user-attachments/assets/12430595-6f58-4d07-9cb6-3a0fd19f14a2
 
 ## Technical features
 
-The project was developed using C#, Unity and the HLSL Shader language. The work has been enhanced following my graduation through the use of Compute Shaders, which drastically improved performance.
+The project was developed for the Meta Quest 3 using C#, Unity and the HLSL Shader language, using the Oculus XR Plugin. 
+
+After my graduation, I kept working on the project. The main modification involved using Compute Shaders to optimize portions of the rendering pipeline, which drastically improved performance.
