@@ -19,7 +19,7 @@ After my graduation, I kept working on the project. The main modification involv
 
 Here you can find the UML Diagram describing the architetcure of the software.
 
-<img width="1072" height="1321" alt="thesiscomponentdiagram drawio(2)" src="https://github.com/user-attachments/assets/f613211d-d27d-404b-9c2c-ca1207264669" />
+<img width="1221" height="1401" alt="thesiscomponentdiagram drawio(2)(1)" src="https://github.com/user-attachments/assets/ef4b805f-8efe-46c9-b55f-f1a22d38c17d" />
 
 The three main components are the Room component, the Simulation Logic component and the Excercise component:
 
