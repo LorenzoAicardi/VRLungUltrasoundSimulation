@@ -23,8 +23,7 @@ Here you can find the UML Diagram describing the architetcure of the software.
 
 The three main components are the Room component, the Simulation Logic component and the Excercise component:
 
-* The Room Component manages the simulation lifecycle and online func-
-tionalities;
+* The Room Component manages the simulation lifecycle and online functionalities;
 * The Simulation Logic Component handles ultrasound image simulation
 through probe interaction;
 * The Exercise Component administers training scenarios and assessment.
