@@ -30,4 +30,4 @@ through probe interaction;
 
 ## Results
 
-This work has been positively evaluated by medicine students from Università di Pavia, who especially appreciated the realism of the images and the realism of the experience. The thesis has been evaluated with a perfect 7/7 by the commission.
+This work has been positively evaluated by medicine students from Università di Pavia, who especially appreciated the realism of both images and the experience. The thesis has been evaluated a perfect 7/7 by the commission.
